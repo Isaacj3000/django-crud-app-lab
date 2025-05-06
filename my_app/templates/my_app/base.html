@@ -35,15 +35,23 @@
                     <li class="nav-item">
                         <span class="nav-link">Welcome, {{ user.username }}</span>
                     </li>
+                    {% if user.is_staff %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin:logout' %}">Logout</a>
+                        <a class="nav-link" href="{% url 'my_app:logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin:login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'my_app:register' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_app:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:login' %}">Admin Login</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -52,6 +60,14 @@
     </nav>
 
     <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
         {% block content %}
         {% endblock %}
     </div>

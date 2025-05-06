@@ -3,7 +3,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
 from .models import Plant, WateringRecord, CareTask
+from django.contrib.auth import login, authenticate, logout
 
 def home(request):
     """Landing page view"""
@@ -210,3 +213,51 @@ def plant_care_tasks(request, plant_pk):
         'plant': plant,
         'available_tasks': available_tasks
     })
+
+def register(request):
+    """Handle user registration"""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            # Ensure new users don't have admin privileges
+            user.is_staff = False
+            user.is_superuser = False
+            user.save()
+            messages.success(request, 'Account created successfully! You can now log in.')
+            return redirect('admin:login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'my_app/registration/register.html', {'form': form})
+
+def user_login(request):
+    """Handle user login"""
+    if request.user.is_authenticated:
+        return redirect('my_app:plant_list')
+        
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_staff:
+                    messages.error(request, 'Please use the Admin Login for staff accounts.')
+                else:
+                    login(request, user)
+                    messages.success(request, f'Welcome back, {username}!')
+                    return redirect('my_app:plant_list')
+            else:
+                messages.error(request, 'Invalid username or password.')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'my_app/registration/login.html', {'form': form})
+
+def user_logout(request):
+    """Handle user logout"""
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('my_app:home')

@@ -5,6 +5,9 @@ app_name = 'my_app'
 
 urlpatterns = [
     path('', views.home, name='home'),  # Add home as the root URL
+    path('register/', views.register, name='register'),  # Add registration URL
+    path('login/', views.user_login, name='login'),  # Add custom login URL
+    path('logout/', views.user_logout, name='logout'),  # Add custom logout URL
     path('plants/', views.plant_list, name='plant_list'),
     path('plants/<int:pk>/', views.plant_detail, name='plant_detail'),
     path('plants/new/', views.plant_create, name='plant_create'),
