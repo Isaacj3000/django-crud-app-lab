@@ -1,6 +1,7 @@
 # 🌱 Plant Keeper
 
 A Django web application to help you manage and track your plant collection. Keep track of watering schedules, care tasks, and plant health all in one place.
+<img width="1417" alt="Screenshot 2025-05-06 at 2 18 25 AM" src="https://github.com/user-attachments/assets/e1ed08da-9eed-479e-b502-4a471051068b" />
 
 ## Features
 
