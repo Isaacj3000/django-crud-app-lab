@@ -1,0 +1,46 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Care Tasks{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Care Tasks</h1>
+    <a href="{% url 'my_app:care_task_create' %}" class="btn btn-success">Add New Task</a>
+</div>
+
+{% if care_tasks %}
+    <div class="row">
+        {% for task in care_tasks %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ task.get_task_type_display }}: {{ task.name }}</h5>
+                        <p class="card-text">
+                            <strong>Frequency:</strong> Every {{ task.frequency }} days<br>
+                            {% if task.last_completed %}
+                                <strong>Last Completed:</strong> {{ task.last_completed|date:"M d, Y" }}<br>
+                            {% else %}
+                                <strong>Last Completed:</strong> Never<br>
+                            {% endif %}
+                            {% if task.notes %}
+                                <strong>Notes:</strong> {{ task.notes }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100">
+                            <a href="{% url 'my_app:care_task_detail' task.pk %}" class="btn btn-outline-primary">Details</a>
+                            <a href="{% url 'my_app:care_task_edit' task.pk %}" class="btn btn-outline-secondary">Edit</a>
+                            <a href="{% url 'my_app:care_task_delete' task.pk %}" class="btn btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        No care tasks found. <a href="{% url 'my_app:care_task_create' %}">Create your first task</a>.
+    </div>
+{% endif %}
+{% endblock %} 

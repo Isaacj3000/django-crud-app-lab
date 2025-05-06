@@ -1,0 +1,39 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Watering History - {{ plant.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Watering History for {{ plant.name }}</h2>
+        <a href="{% url 'my_app:watering_record_create' plant.pk %}" class="btn btn-success">Record New Watering</a>
+    </div>
+    <div class="card-body">
+        {% if watering_records %}
+            <div class="list-group">
+                {% for record in watering_records %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Watered on {{ record.watered_at|date:"F d, Y" }}</h5>
+                            <div>
+                                <small class="text-muted">{{ record.watered_at|date:"g:i A" }}</small>
+                                <a href="{% url 'my_app:watering_record_delete' plant.pk record.pk %}" class="btn btn-outline-danger btn-sm ms-2">Delete</a>
+                            </div>
+                        </div>
+                        {% if record.notes %}
+                            <p class="mb-1">{{ record.notes }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No watering records found for this plant.
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'my_app:plant_detail' plant.pk %}" class="btn btn-secondary">Back to Plant</a>
+    </div>
+</div>
+{% endblock %} 

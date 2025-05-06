@@ -1,0 +1,23 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Delete Watering Record{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Delete Watering Record</h2>
+    </div>
+    <div class="card-body">
+        <p class="lead">Are you sure you want to delete the watering record from {{ record.watered_at|date:"F d, Y" }}?</p>
+        <p class="text-danger">This action cannot be undone.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <a href="{% url 'my_app:watering_record_list' plant.pk %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,22 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Welcome to Plant Keeper{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Welcome to Plant Keeper</h1>
+    <p class="lead mb-4">Keep track of your plants and their watering schedules</p>
+    
+    {% if user.is_authenticated %}
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'my_app:plant_list' %}" class="btn btn-success btn-lg px-4 gap-3">View My Plants</a>
+            <a href="{% url 'my_app:plant_create' %}" class="btn btn-outline-success btn-lg px-4">Add New Plant</a>
+        </div>
+    {% else %}
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'admin:login' %}" class="btn btn-success btn-lg px-4 gap-3">Login</a>
+            <a href="{% url 'admin:index' %}" class="btn btn-outline-success btn-lg px-4">Admin</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

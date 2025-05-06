@@ -1,0 +1,90 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}{{ plant.name }} - Plant Details{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{ plant.name }}</h2>
+            <div class="btn-group">
+                <a href="{% url 'my_app:plant_edit' plant.pk %}" class="btn btn-outline-primary">Edit</a>
+                <a href="{% url 'my_app:plant_delete' plant.pk %}" class="btn btn-outline-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Plant Details</h5>
+                <p>
+                    <strong>Species:</strong> {{ plant.species }}<br>
+                    <strong>Watering Frequency:</strong> Every {{ plant.watering_frequency }} days<br>
+                    <strong>Last Watered:</strong> {{ plant.last_watered|date:"M d, Y" }}<br>
+                    {% if plant.notes %}
+                        <strong>Notes:</strong><br>
+                        {{ plant.notes }}
+                    {% endif %}
+                </p>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'my_app:watering_record_create' plant.pk %}" class="btn btn-success">Record Watering</a>
+                    <a href="{% url 'my_app:watering_record_list' plant.pk %}" class="btn btn-outline-primary">View Watering History</a>
+                    <a href="{% url 'my_app:plant_care_tasks' plant.pk %}" class="btn btn-outline-secondary">Manage Care Tasks</a>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h5>Care Tasks</h5>
+                {% if plant.care_tasks.all %}
+                    <div class="list-group">
+                        {% for task in plant.care_tasks.all %}
+                            <div class="list-group-item">
+                                <h6 class="mb-1">{{ task.get_task_type_display }}: {{ task.name }}</h6>
+                                <p class="mb-1">
+                                    <small class="text-muted">
+                                        Every {{ task.frequency }} days
+                                        {% if task.last_completed %}
+                                            <br>Last completed: {{ task.last_completed|date:"M d, Y" }}
+                                        {% endif %}
+                                    </small>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No care tasks associated with this plant.</p>
+                    <a href="{% url 'my_app:plant_care_tasks' plant.pk %}" class="btn btn-outline-success">Add Care Tasks</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Recent Watering History</h5>
+            {% if watering_records %}
+                <div class="list-group">
+                    {% for record in watering_records %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ record.watered_at|date:"M d, Y H:i" }}</h6>
+                                    {% if record.notes %}
+                                        <p class="mb-1">{{ record.notes }}</p>
+                                    {% endif %}
+                                </div>
+                                <a href="{% url 'my_app:watering_record_delete' plant.pk record.pk %}" 
+                                   class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No watering records found.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'my_app:plant_list' %}" class="btn btn-outline-secondary">Back to Plants</a>
+    </div>
+</div>
+{% endblock %} 

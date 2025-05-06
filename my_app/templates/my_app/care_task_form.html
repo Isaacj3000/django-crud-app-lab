@@ -1,0 +1,59 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}
+    {% if care_task %}Edit Care Task{% else %}New Care Task{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">{% if care_task %}Edit Care Task{% else %}New Care Task{% endif %}</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Task Name</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ care_task.name|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="task_type" class="form-label">Task Type</label>
+                        <select class="form-select" id="task_type" name="task_type" required>
+                            <option value="">Select a task type</option>
+                            {% for value, label in task_types %}
+                                <option value="{{ value }}" {% if care_task.task_type == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="frequency" class="form-label">Frequency (days)</label>
+                        <input type="number" class="form-control" id="frequency" name="frequency" 
+                               value="{{ care_task.frequency|default:'' }}" min="1" required>
+                        <div class="form-text">How often should this task be performed?</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3">{{ care_task.notes|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            {% if care_task %}Save Changes{% else %}Create Task{% endif %}
+                        </button>
+                        <a href="{% url 'my_app:care_task_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

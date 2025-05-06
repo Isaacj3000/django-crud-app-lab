@@ -1,0 +1,38 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}My Plants{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Plants</h1>
+    <a href="{% url 'my_app:plant_create' %}" class="btn btn-success">Add New Plant</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for plant in plants %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ plant.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ plant.species }}</h6>
+                <p class="card-text">
+                    <small class="text-muted">Water every {{ plant.watering_frequency }} days</small><br>
+                    Last watered: {{ plant.last_watered|date:"M d, Y" }}
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'my_app:plant_detail' plant.pk %}" class="btn btn-outline-success btn-sm">View Details</a>
+                <a href="{% url 'my_app:plant_edit' plant.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                <a href="{% url 'my_app:plant_delete' plant.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            You haven't added any plants yet. <a href="{% url 'my_app:plant_create' %}" class="alert-link">Add your first plant</a>!
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

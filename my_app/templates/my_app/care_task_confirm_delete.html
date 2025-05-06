@@ -1,0 +1,27 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Delete Care Task{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Delete Care Task</h2>
+            </div>
+            <div class="card-body">
+                <p class="lead">Are you sure you want to delete the care task "{{ care_task.name }}"?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Delete Task</button>
+                        <a href="{% url 'my_app:care_task_detail' care_task.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
